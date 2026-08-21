@@ -133,5 +133,5 @@ export function normalize(values: number[]) {
 }
 
 export async function embedQuery(query: string) {
-  return (await embed([query]))[0];
+  return (await embed([query]))[0]!;
 }

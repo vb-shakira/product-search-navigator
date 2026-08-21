@@ -252,12 +252,12 @@ function Index() {
 type Doc = {
   id: string;
   metadata: { category: string; product: string };
-  point: [number, number] | number[];
+  point: number[];
 };
 
 function Scatter({ docs, highlight }: { docs: Doc[]; highlight: string[] }) {
-  const xs = docs.map((d) => d.point[0]);
-  const ys = docs.map((d) => d.point[1]);
+  const xs = docs.map((d) => d.point[0] ?? 0);
+  const ys = docs.map((d) => d.point[1] ?? 0);
   const minX = Math.min(...xs);
   const maxX = Math.max(...xs);
   const minY = Math.min(...ys);
@@ -286,8 +286,8 @@ function Scatter({ docs, highlight }: { docs: Doc[]; highlight: string[] }) {
         return (
           <g key={d.id}>
             <circle
-              cx={sx(d.point[0])}
-              cy={sy(d.point[1])}
+              cx={sx(d.point[0] ?? 0)}
+              cy={sy(d.point[1] ?? 0)}
               r={on ? 9 : 6}
               fill={CATEGORY_COLORS[d.metadata.category] ?? "var(--muted-foreground)"}
               fillOpacity={highlight.length && !on ? 0.28 : 0.9}

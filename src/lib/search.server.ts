@@ -27,9 +27,9 @@ export function cosine(a: number[], b: number[]) {
   let na = 0;
   let nb = 0;
   for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    na += a[i] * a[i];
-    nb += b[i] * b[i];
+    dot += a[i]! * b[i]!;
+    na += a[i]! * a[i]!;
+    nb += b[i]! * b[i]!;
   }
   return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
 }
@@ -37,10 +37,10 @@ export function cosine(a: number[], b: number[]) {
 /** Deterministic 2D projection of embeddings via power-iteration PCA. */
 function project(vectors: number[][]): [number, number][] {
   const n = vectors.length;
-  const d = vectors[0].length;
+  const d = vectors[0]!.length;
   const mean = new Array(d).fill(0);
-  for (const v of vectors) for (let i = 0; i < d; i++) mean[i] += v[i] / n;
-  const centered = vectors.map((v) => v.map((x, i) => x - mean[i]));
+  for (const v of vectors) for (let i = 0; i < d; i++) mean[i] += v[i]! / n;
+  const centered = vectors.map((v) => v.map((x, i) => x - mean[i]!));
 
   const components: number[][] = [];
   let work = centered.map((v) => [...v]);
@@ -50,8 +50,8 @@ function project(vectors: number[][]): [number, number][] {
       const next = new Array(d).fill(0);
       for (const v of work) {
         let s = 0;
-        for (let i = 0; i < d; i++) s += v[i] * comp[i];
-        for (let i = 0; i < d; i++) next[i] += s * v[i];
+        for (let i = 0; i < d; i++) s += v[i]! * comp[i]!;
+        for (let i = 0; i < d; i++) next[i] += s * v[i]!;
       }
       const norm = Math.sqrt(next.reduce((acc, x) => acc + x * x, 0)) || 1;
       comp = next.map((x) => x / norm);
@@ -59,18 +59,18 @@ function project(vectors: number[][]): [number, number][] {
     components.push(comp);
     work = work.map((v) => {
       let s = 0;
-      for (let i = 0; i < d; i++) s += v[i] * comp[i];
-      return v.map((x, i) => x - s * comp[i]);
+      for (let i = 0; i < d; i++) s += v[i]! * comp[i]!;
+      return v.map((x, i) => x - s * comp[i]!);
     });
   }
 
   return centered.map((v) => {
     const coords = components.map((comp) => {
       let s = 0;
-      for (let i = 0; i < d; i++) s += v[i] * comp[i];
+      for (let i = 0; i < d; i++) s += v[i]! * comp[i]!;
       return s;
     });
-    return [coords[0], coords[1]] as [number, number];
+    return [coords[0]!, coords[1]!] as [number, number];
   });
 }
 
@@ -81,13 +81,13 @@ export async function getIndex(): Promise<IndexedDoc[]> {
         PRODUCT_DOCS.map((d) => `${d.metadata.product} (${d.metadata.category}): ${d.text}`),
       );
       const points = project(embeddings);
-      return PRODUCT_DOCS.map((doc, i) => ({ ...doc, embedding: embeddings[i], point: points[i] }));
+      return PRODUCT_DOCS.map((doc, i) => ({ ...doc, embedding: embeddings[i]!, point: points[i]! }));
     })().catch((err) => {
       indexPromise = null;
       throw err;
     });
   }
-  return indexPromise;
+  return indexPromise!;
 }
 
 const STOP = new Set([

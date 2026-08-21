@@ -49,9 +49,9 @@ export const hybridSearch = createServerFn({ method: "POST" })
         id: d.id,
         text: d.text,
         metadata: d.metadata,
-        vectorScore: vector[i],
-        keywordScore: keyword[i],
-        score: data.alpha * nVector[i] + (1 - data.alpha) * nKeyword[i],
+        vectorScore: vector[i]!,
+        keywordScore: keyword[i]!,
+        score: data.alpha * nVector[i]! + (1 - data.alpha) * nKeyword[i]!,
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 6);

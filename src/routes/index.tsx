@@ -138,7 +138,7 @@ function Index() {
               <Slider
                 className="mt-3"
                 value={[alpha]}
-                onValueChange={(v) => setAlpha(v[0])}
+                onValueChange={(v) => setAlpha(v[0] ?? 0.6)}
                 min={0}
                 max={1}
                 step={0.05}
